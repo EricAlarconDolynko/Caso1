@@ -14,28 +14,19 @@ public class Cinta {
 		this.distribucion = distribucion;
 	}
 	
-	
-	public synchronized void entrarCinta() {
-		while (permiso == 0 || productoCinta!=null) {
-			//Thread.yield();
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		permiso--;
+	public synchronized int getPermiso() {
+		return permiso;
 	}
 	
-	public synchronized void entrarCintaRetiro() {
-		while (permiso == 0 || productoCinta == null) {
-			//Thread.yield();
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+	public synchronized String getProductoCinta() {
+		return productoCinta;
+	}
+	
+	public synchronized void aumentarPermiso() {
+		permiso++;
+	}
+	
+	public synchronized void disminuirPermiso() {
 		permiso--;
 	}
 	
@@ -44,7 +35,9 @@ public class Cinta {
 	}
 	
 	public synchronized String retirarProducto() {
-		return productoCinta;
+		String retorno = productoCinta;
+		productoCinta = null;
+		return retorno;
 	}
 	
 	public synchronized void salirCinta() {

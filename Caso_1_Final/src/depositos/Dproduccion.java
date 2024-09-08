@@ -26,10 +26,8 @@ public class Dproduccion {
 		}
 	}
 	
-	public synchronized void entrarRetirarDeposito() {
-		while (deposito.size()==0) {
-			Thread.yield();	
-		}
+	public synchronized int getSizeDeposito() {
+		return deposito.size();
 	}
 	
 	public synchronized void agregarProducto(String producto) {

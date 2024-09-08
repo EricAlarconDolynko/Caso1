@@ -29,11 +29,12 @@ public class Ddistribucion {
 		permiso--;
 	}
 	
-	public synchronized void entrarDepositoAgregar() {
-		while (deposito.size() >= capDepDist) {
-			notifyAll();
-			Thread.yield();
-		}
+	public synchronized int getSizeDeposito() {
+		return deposito.size();
+	}
+	
+	public synchronized int getCapDepDist() {
+		return capDepDist;
 	}
 	
 	public synchronized boolean present(String producto) {

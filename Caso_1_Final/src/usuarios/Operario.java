@@ -25,14 +25,14 @@ public class Operario extends Thread{
 	
 	public synchronized void colocarProducto() {
 		while (counterIN > 0) {
-			dproduccion.entrarRetirarDeposito();
+			entrarRetirarDeposito();
 			String producto = dproduccion.retirarProducto();
 			
 			if (producto.equals("FIN_A") || producto.equals("FIN_B")) {
 				counterIN -= 1;
 			}
 			
-			cinta.entrarCinta();
+			entrarCinta();
 			cinta.ponerProducto(producto);
 			
 			if (counterIN == 0) {
@@ -44,9 +44,23 @@ public class Operario extends Thread{
 
 	}
 	
+	public synchronized void entrarCinta() {
+		while (cinta.getPermiso() == 0 || cinta.getProductoCinta()!=null) {
+			Thread.yield();
+		}
+		cinta.disminuirPermiso();
+	}
+	
+	
+	public synchronized void entrarRetirarDeposito() {
+		while (dproduccion.getSizeDeposito() ==0) {
+			Thread.yield();	
+		}
+	}
+	
 	public synchronized void depositarProducto() {
 		while (counterOUT > 0) {
-			cinta.entrarCintaRetiro();
+			entrarCintaRetiro();
 			String producto = cinta.retirarProducto();
 			cinta.setProductoCinta(null);
 			
@@ -59,11 +73,27 @@ public class Operario extends Thread{
 			
 			cinta.salirCinta();
 			
-			distribucion.entrarDepositoAgregar();
+			entrarDepositoAgregar();
 			distribucion.agregarProducto(producto);		
 			
 			cinta.avisarDistribuidores();
 		}
+	}
+	
+	public synchronized void entrarDepositoAgregar() {
+		while (distribucion.getSizeDeposito() >= distribucion.getCapDepDist()) {
+			synchronized(distribucion) {
+				distribucion.notifyAll();				
+			}
+			Thread.yield();
+		}
+	}
+	
+	public synchronized void entrarCintaRetiro() {
+		while (cinta.getPermiso() == 0 || cinta.getProductoCinta() == null) {
+			Thread.yield();
+		}
+		cinta.disminuirPermiso();
 	}
 	
 	@Override
