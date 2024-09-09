@@ -7,11 +7,13 @@ public class Distribuidor extends Thread{
 	private String color;
 	private Ddistribucion distribucion;
 	private String productoActual;
+	private int counterProducto;
 	
 	public Distribuidor(String color, Ddistribucion distribucion) {
 		this.color = color;
 		this.distribucion = distribucion;
 		this.productoActual = "C";
+		this.counterProducto = 0;
 	}
 	
 	public synchronized void consumir() {
@@ -20,9 +22,10 @@ public class Distribuidor extends Thread{
 		while (!productoActual.equals(productoFinal)) {
 			distribucion.entrarDeposito(productoAConsumir);
 			productoActual = distribucion.retirarProducto(productoAConsumir);
+			counterProducto += 1;
 			distribucion.salirDeposito();
 		}
-		System.out.println(color + " TERMINE DE CONSUMIR");
+		System.out.println(color + " TERMINE DE CONSUMIR " + (counterProducto-1) + " productos  y 1 de tipo FIN_" + productoConsumir());
 	}
 	
 	public String productoConsumir() {

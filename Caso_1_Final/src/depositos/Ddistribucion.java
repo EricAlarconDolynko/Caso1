@@ -10,6 +10,7 @@ public class Ddistribucion {
 	private int counterOutControl;
 	private int permiso;
 	
+	
 	public Ddistribucion(int capDepDist) {
 		this.capDepDist = capDepDist;
 		this.deposito = new ArrayList<String>();

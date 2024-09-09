@@ -38,6 +38,7 @@ public class Ejecucion {
 		Cinta cinta = new Cinta(dproduccion,distribucion);
 		
 		
+		System.out.println("Cada color va a producir " + (2*numProductos) + " productos");
 		//Creacion Productores
 		for(int i = 0; i < 4; i++) {
 			if(i%2 == 0) {
